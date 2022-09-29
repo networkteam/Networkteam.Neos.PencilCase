@@ -37312,8 +37312,6 @@ __webpack_require__(/*! ./manifest */ "./src/manifest.js");
 "use strict";
 
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _neosUiExtensibility = __webpack_require__(/*! @neos-project/neos-ui-extensibility */ "./node_modules/@neos-project/neos-ui-extensibility/dist/index.js");
 
 var _neosUiExtensibility2 = _interopRequireDefault(_neosUiExtensibility);
@@ -37357,46 +37355,53 @@ var addExamplePlugin = function addExamplePlugin(ckEditorConfiguration, options)
   var configCke = globalRegistry.get('ckEditor5').get('config');
   var pencilCase = frontendConfiguration['Networkteam.Neos.PencilCase'];
 
-  configCke.set('configureHeadings', function (config) {
-    var additionalOptions = Object.keys(pencilCase.style).map(function (model) {
-      return {
-        model: model,
-        view: {
-          name: pencilCase.style[model].element,
-          attributes: pencilCase.style[model].attributes
-        },
-        title: pencilCase.style[model].title,
-        class: 'ck-heading_heading_' + model,
+  if (pencilCase && pencilCase.style) {
+    configCke.set('configureHeadings', function (config) {
+      var additionalOptions = Object.keys(pencilCase.style).map(function (model) {
+        return {
+          model: model,
+          view: {
+            name: pencilCase.style[model].element,
+            attributes: pencilCase.style[model].attributes
+          },
+          title: pencilCase.style[model].title,
+          class: 'ck-heading_heading_' + model,
 
-        // It needs to be converted before the standard 'heading2'.
-        converterPriority: 'high'
+          // It needs to be converted before the standard 'heading2'.
+          converterPriority: 'high'
+        };
+      });
+
+      var newOptions = [{ model: 'paragraph' }, { model: 'heading1', view: 'h1' }, { model: 'heading2', view: 'h2' }, { model: 'heading3', view: 'h3' }, { model: 'heading4', view: 'h4' }, { model: 'heading5', view: 'h5' }, { model: 'heading6', view: 'h6' }, { model: 'pre', view: 'pre' }].concat(_toConsumableArray(additionalOptions));
+
+      var headingConfig = {
+        heading: {
+          options: newOptions
+        }
       };
+      return Object.assign(config, headingConfig);
     });
 
-    return _extends({}, config, {
-      heading: {
-        options: [].concat(_toConsumableArray(additionalOptions))
-      }
-    });
-  });
+    // Example of custom headline
+    // Don't forget about updating the config registry with relevant config
+    // @see https://docs.ckeditor.com/ckeditor5/latest/features/headings.html
+    //
 
-  // Example of custom headline
-  // Don't forget about updating the config registry with relevant config
-  // @see https://docs.ckeditor.com/ckeditor5/latest/features/headings.html
-  //
-  Object.keys(pencilCase.style).forEach(function (model) {
-    richtextToolbar.set('style/' + model, {
-      commandName: 'heading',
-      commandArgs: [{
-        value: model
-      }],
-      label: pencilCase.style[model].title,
-      isVisible: (0, _plowJs.$get)('formatting.' + model),
-      isActive: function isActive(formattingUnderCursor) {
-        return (0, _plowJs.$get)('heading', formattingUnderCursor) === model;
-      }
+    console.log(pencilCase.style);
+    Object.keys(pencilCase.style).forEach(function (model) {
+      richtextToolbar.set('style/' + model, {
+        commandName: 'heading',
+        commandArgs: [{
+          value: model
+        }],
+        label: pencilCase.style[model].title,
+        isVisible: (0, _plowJs.$get)('formatting.' + model),
+        isActive: function isActive(formattingUnderCursor) {
+          return (0, _plowJs.$get)('heading', formattingUnderCursor) === model;
+        }
+      });
     });
-  });
+  }
 
   // richtextToolbar.set(
   //   'exampleExtension',
