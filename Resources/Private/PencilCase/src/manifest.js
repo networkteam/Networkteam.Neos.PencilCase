@@ -1,6 +1,5 @@
-
 import manifest from '@neos-project/neos-ui-extensibility';
-import {$add, $get} from 'plow-js';
+import { $add, $get } from 'plow-js';
 import ExamplePlugin from './examplePlugin';
 import ExampleButton from './ExampleButton';
 
@@ -14,29 +13,41 @@ import ExampleButton from './ExampleButton';
 //
 // it needs to return the updated ckEditorConfiguration.
 const addExamplePlugin = (ckEditorConfiguration, options) => {
-    if ($get(['formatting', 'Networkteam.Neos.PencilCase:PencilCase'], options.editorOptions)) {
-        ckEditorConfiguration.plugins = ckEditorConfiguration.plugins || [];
-        return $add('plugins', ExamplePlugin, ckEditorConfiguration);
-    }
-    return ckEditorConfiguration;
+  if (
+    $get(
+      ['formatting', 'Networkteam.Neos.PencilCase:PencilCase'],
+      options.editorOptions
+    )
+  ) {
+    ckEditorConfiguration.plugins = ckEditorConfiguration.plugins || [];
+    return $add('plugins', ExamplePlugin, ckEditorConfiguration);
+  }
+  return ckEditorConfiguration;
 };
 
-manifest('Networkteam.Neos.PencilCase:PencilCase', {}, globalRegistry => {
-    const richtextToolbar = globalRegistry.get('ckEditor5').get('richtextToolbar');
+manifest('Networkteam.Neos.PencilCase:PencilCase', {}, (globalRegistry) => {
+  const richtextToolbar = globalRegistry
+    .get('ckEditor5')
+    .get('richtextToolbar');
 
-    richtextToolbar.set('exampleExtension', {
-        // the command name must match the command in examplePlugin.js this.editor.commands.add(...)
-        commandName: 'highlightCommand',
-        // the path in isActive must match the commandName from the line above, to ensure the active state
-        // of the button automatically toggles.
-        isActive: $get('highlightCommand'),
-        isVisible: $get(['formatting', 'Networkteam.Neos.PencilCase:PencilCase']),
+  richtextToolbar.set(
+    'exampleExtension',
+    {
+      // the command name must match the command in examplePlugin.js this.editor.commands.add(...)
+      commandName: 'highlightCommand',
+      // the path in isActive must match the commandName from the line above, to ensure the active state
+      // of the button automatically toggles.
+      isActive: $get('highlightCommand'),
+      isVisible: $get(['formatting', 'Networkteam.Neos.PencilCase:PencilCase']),
 
-        component: ExampleButton,
-        icon: 'plus-square',
-        tooltip: 'Mark a span',
-    }, 'before strong');
+      component: ExampleButton,
+      icon: 'plus-square',
+      tooltip: 'Mark a span',
+    },
+    'before strong'
+  );
 
-    const config = globalRegistry.get('ckEditor5').get('config');
-    config.set('exampleExtension', addExamplePlugin);
+  const config = globalRegistry.get('ckEditor5').get('config');
+
+  config.set('exampleExtension', addExamplePlugin);
 });

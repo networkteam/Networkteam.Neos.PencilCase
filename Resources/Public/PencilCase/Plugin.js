@@ -3130,6 +3130,26 @@ module.exports = (0, _readFromConsumerApi2.default)('vendor')().plow;
 
 /***/ }),
 
+/***/ "./node_modules/@neos-project/neos-ui-extensibility/src/shims/vendor/prop-types/index.js":
+/*!***********************************************************************************************!*\
+  !*** ./node_modules/@neos-project/neos-ui-extensibility/src/shims/vendor/prop-types/index.js ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _readFromConsumerApi = __webpack_require__(/*! ../../../../dist/readFromConsumerApi */ "./node_modules/@neos-project/neos-ui-extensibility/dist/readFromConsumerApi.js");
+
+var _readFromConsumerApi2 = _interopRequireDefault(_readFromConsumerApi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = (0, _readFromConsumerApi2.default)('vendor')().PropTypes;
+
+/***/ }),
+
 /***/ "./node_modules/@neos-project/neos-ui-extensibility/src/shims/vendor/react/index.js":
 /*!******************************************************************************************!*\
   !*** ./node_modules/@neos-project/neos-ui-extensibility/src/shims/vendor/react/index.js ***!
@@ -37099,11 +37119,19 @@ module.exports = function(originalModule) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = ExampleButton;
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class, _class2, _temp2;
 
 var _react = __webpack_require__(/*! react */ "./node_modules/@neos-project/neos-ui-extensibility/src/shims/vendor/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/@neos-project/neos-ui-extensibility/src/shims/vendor/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _reactUiComponents = __webpack_require__(/*! @neos-project/react-ui-components */ "./node_modules/@neos-project/neos-ui-extensibility/src/shims/neosProjectPackages/react-ui-components/index.js");
 
@@ -37113,27 +37141,56 @@ var _neosUiCkeditor5Bindings = __webpack_require__(/*! @neos-project/neos-ui-cke
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// @neos(globalRegistry => ({
-//     i18nRegistry: globalRegistry.get('i18n')
-// }))
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function ExampleButton(_ref) {
-  var isActive = _ref.isActive,
-      icon = _ref.icon,
-      tooltip = _ref.tooltip;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  var handleClick = function handleClick() {
-    // this command name must match the identifier of the command from examplePlugin.js, this.editor.commands.add(...)
-    (0, _neosUiCkeditor5Bindings.executeCommand)('highlightCommand');
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ExampleButton = (_dec = (0, _neosUiDecorators.neos)(function (globalRegistry) {
+  return {
+    i18nRegistry: globalRegistry.get('i18n')
   };
+}), _dec(_class = (_temp2 = _class2 = function (_Component) {
+  _inherits(ExampleButton, _Component);
 
-  return _react2.default.createElement(_reactUiComponents.IconButton, {
-    onClick: handleClick,
-    isActive: Boolean(isActive)
-    // title={i18nRegistry.translate(tooltip)}
-    , icon: icon
-  });
-}
+  function ExampleButton() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, ExampleButton);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ExampleButton.__proto__ || Object.getPrototypeOf(ExampleButton)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function () {
+      // this command name must match the identifier of the command from examplePlugin.js, this.editor.commands.add(...)
+      (0, _neosUiCkeditor5Bindings.executeCommand)('highlightCommand');
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(ExampleButton, [{
+    key: 'render',
+    value: function render() {
+      var props = {
+        onClick: this.handleClick,
+        isActive: Boolean(this.props.isActive),
+        title: this.props.i18nRegistry.translate(this.props.tooltip),
+        icon: this.props.icon
+      };
+      return _react2.default.createElement(_reactUiComponents.IconButton, props);
+    }
+  }]);
+
+  return ExampleButton;
+}(_react.Component), _class2.propTypes = {
+  i18nRegistry: _propTypes2.default.object,
+  tooltip: _propTypes2.default.string,
+  isActive: _propTypes2.default.boolean
+}, _temp2)) || _class);
+exports.default = ExampleButton;
 
 /***/ }),
 
@@ -37148,7 +37205,7 @@ function ExampleButton(_ref) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.default = undefined;
 
@@ -37169,54 +37226,56 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Example = function (_Plugin) {
-    _inherits(Example, _Plugin);
+  _inherits(Example, _Plugin);
 
-    function Example() {
-        _classCallCheck(this, Example);
+  function Example() {
+    _classCallCheck(this, Example);
 
-        return _possibleConstructorReturn(this, (Example.__proto__ || Object.getPrototypeOf(Example)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Example.__proto__ || Object.getPrototypeOf(Example)).apply(this, arguments));
+  }
+
+  _createClass(Example, [{
+    key: 'init',
+    value: function init() {
+      // we allow to mark arbitrary texts with the attribute "exampleAttribute" in the CKEditor Model.
+      this.editor.model.schema.extend('$text', {
+        allowAttributes: 'exampleAttribute'
+      });
+
+      // then, we define how this attribute in the model should be translated to the view, i.e. by setting a span with a
+      // certain class; and a certain CSS style.
+      // Reference: https://ckeditor.com/docs/ckeditor5/latest/api/module_engine_conversion_conversion-Conversion.html#function-attributeToElement
+      var config = {
+        // the name of the model must match the "allowAttribute" from above.
+        model: 'exampleAttribute',
+        view: {
+          name: 'span',
+          classes: 'example-class',
+
+          // here, we additionally set a CSS style property inline. In the real world, you probably would
+          // not do this, but instead style the class using your CSS.
+          //
+          // NOTE: when removing the style definition here, the style tags are automatically removed when a
+          //       <span class="example-class" style="..."></span> is encountered.
+          styles: {
+            'background-color': 'green'
+          }
+        }
+      };
+      this.editor.conversion.attributeToElement(config);
+
+      // Finally, we need to add a new command to apply this attribute.
+      // "highlightCommand" is the identifier of the command now
+      this.editor.commands.add('highlightCommand', new _attributecommand2.default(this.editor, 'exampleAttribute'));
     }
+  }], [{
+    key: 'pluginName',
+    get: function get() {
+      return 'exampleExtension';
+    }
+  }]);
 
-    _createClass(Example, [{
-        key: 'init',
-        value: function init() {
-            // we allow to mark arbitrary texts with the attribute "exampleAttribute" in the CKEditor Model.
-            this.editor.model.schema.extend('$text', { allowAttributes: 'exampleAttribute' });
-
-            // then, we define how this attribute in the model should be translated to the view, i.e. by setting a span with a
-            // certain class; and a certain CSS style.
-            // Reference: https://ckeditor.com/docs/ckeditor5/latest/api/module_engine_conversion_conversion-Conversion.html#function-attributeToElement
-            var config = {
-                // the name of the model must match the "allowAttribute" from above.
-                model: 'exampleAttribute',
-                view: {
-                    name: 'span',
-                    classes: 'example-class',
-
-                    // here, we additionally set a CSS style property inline. In the real world, you probably would
-                    // not do this, but instead style the class using your CSS.
-                    //
-                    // NOTE: when removing the style definition here, the style tags are automatically removed when a
-                    //       <span class="example-class" style="..."></span> is encountered.
-                    styles: {
-                        'background-color': 'green'
-                    }
-                }
-            };
-            this.editor.conversion.attributeToElement(config);
-
-            // Finally, we need to add a new command to apply this attribute.
-            // "highlightCommand" is the identifier of the command now
-            this.editor.commands.add('highlightCommand', new _attributecommand2.default(this.editor, 'exampleAttribute'));
-        }
-    }], [{
-        key: 'pluginName',
-        get: function get() {
-            return 'exampleExtension';
-        }
-    }]);
-
-    return Example;
+  return Example;
 }(_ckeditor5Exports.Plugin);
 
 exports.default = Example;
@@ -37273,31 +37332,32 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 // it needs to return the updated ckEditorConfiguration.
 var addExamplePlugin = function addExamplePlugin(ckEditorConfiguration, options) {
-    if ((0, _plowJs.$get)(['formatting', 'Networkteam.Neos.PencilCase:PencilCase'], options.editorOptions)) {
-        ckEditorConfiguration.plugins = ckEditorConfiguration.plugins || [];
-        return (0, _plowJs.$add)('plugins', _examplePlugin2.default, ckEditorConfiguration);
-    }
-    return ckEditorConfiguration;
+  if ((0, _plowJs.$get)(['formatting', 'Networkteam.Neos.PencilCase:PencilCase'], options.editorOptions)) {
+    ckEditorConfiguration.plugins = ckEditorConfiguration.plugins || [];
+    return (0, _plowJs.$add)('plugins', _examplePlugin2.default, ckEditorConfiguration);
+  }
+  return ckEditorConfiguration;
 };
 
 (0, _neosUiExtensibility2.default)('Networkteam.Neos.PencilCase:PencilCase', {}, function (globalRegistry) {
-    var richtextToolbar = globalRegistry.get('ckEditor5').get('richtextToolbar');
+  var richtextToolbar = globalRegistry.get('ckEditor5').get('richtextToolbar');
 
-    richtextToolbar.set('exampleExtension', {
-        // the command name must match the command in examplePlugin.js this.editor.commands.add(...)
-        commandName: 'highlightCommand',
-        // the path in isActive must match the commandName from the line above, to ensure the active state
-        // of the button automatically toggles.
-        isActive: (0, _plowJs.$get)('highlightCommand'),
-        isVisible: (0, _plowJs.$get)(['formatting', 'Networkteam.Neos.PencilCase:PencilCase']),
+  richtextToolbar.set('exampleExtension', {
+    // the command name must match the command in examplePlugin.js this.editor.commands.add(...)
+    commandName: 'highlightCommand',
+    // the path in isActive must match the commandName from the line above, to ensure the active state
+    // of the button automatically toggles.
+    isActive: (0, _plowJs.$get)('highlightCommand'),
+    isVisible: (0, _plowJs.$get)(['formatting', 'Networkteam.Neos.PencilCase:PencilCase']),
 
-        component: _ExampleButton2.default,
-        icon: 'plus-square',
-        tooltip: 'Mark a span'
-    }, 'before strong');
+    component: _ExampleButton2.default,
+    icon: 'plus-square',
+    tooltip: 'Mark a span'
+  }, 'before strong');
 
-    var config = globalRegistry.get('ckEditor5').get('config');
-    config.set('exampleExtension', addExamplePlugin);
+  var config = globalRegistry.get('ckEditor5').get('config');
+
+  config.set('exampleExtension', addExamplePlugin);
 });
 
 /***/ })
