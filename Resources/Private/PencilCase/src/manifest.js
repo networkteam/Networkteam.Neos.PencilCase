@@ -30,6 +30,54 @@ manifest('Networkteam.Neos.PencilCase:PencilCase', {}, (globalRegistry) => {
     .get('ckEditor5')
     .get('richtextToolbar');
 
+	const configCke = globalRegistry.get('ckEditor5').get('config');
+
+	// console.log(configCke.get('configureHeadings'));
+	console.log('globalRegistry', globalRegistry.get('frontendConfiguration').get('Networkteam.Neos.PencilCase'));
+
+	configCke.set('configureHeadings', config => Object.assign(config, {
+		heading: {
+			options: [
+				{model: 'paragraph'},
+				{model: 'heading1', view: 'h1'},
+				{model: 'heading2', view: 'h2'},
+				{model: 'heading3', view: 'h3'},
+				{model: 'heading4', view: 'h4'},
+				{model: 'heading5', view: 'h5'},
+				{model: 'heading6', view: 'h6'},
+				{model: 'pre', view: 'pre'},
+				{
+					model: 'headingFancy',
+					view: {
+						name: 'span',
+						classes: 'fancy'
+					},
+					title: 'Heading 2 (fancy)',
+					class: 'ck-heading_heading2_fancy',
+
+					// It needs to be converted before the standard 'heading2'.
+					converterPriority: 'high'
+				}
+			]}
+	}));
+
+	// wie komm ich an die gloabe Settings yaml
+
+
+	// // Example of custom headline
+	// // Don't forget about updating the config registry with relevant config
+	// // @see https://docs.ckeditor.com/ckeditor5/latest/features/headings.html
+	//
+	richtextToolbar.set('style/fancy', {
+	    commandName: 'heading',
+	    commandArgs: [{
+	        value: 'headingFancy'
+	    }],
+	    label: 'Fancy',
+	    isVisible: $get('formatting.PencilCase.fancy'),
+	    isActive: formattingUnderCursor => $get('heading', formattingUnderCursor) === 'headingFancy'
+	});
+
   richtextToolbar.set(
     'exampleExtension',
     {

@@ -5,3 +5,6 @@ Neos:
         javascript:
           'Networkteam.Neos.PencilCase:PencilCase':
             resource: resource://Networkteam.Neos.PencilCase/Public/PencilCase/Plugin.js
+      frontendConfiguration:
+        Networkteam.Neos.PencilCase:
+          fancy: true
