@@ -13,6 +13,6 @@
     "buildTargetDirectory": "../../Public/PencilCase"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-basic-styles": "^16.0.0"
+    "@ckeditor/ckeditor5-basic-styles": "^10.1.0"
   }
 }
