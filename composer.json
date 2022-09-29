@@ -3,7 +3,8 @@
     "type": "neos-package",
     "name": "networkteam/neos-pencilcase",
     "require": {
-        "neos/flow": "*"
+        "neos/flow": "*",
+        "neos/neos-ui": "*"
     },
     "autoload": {
         "psr-4": {
