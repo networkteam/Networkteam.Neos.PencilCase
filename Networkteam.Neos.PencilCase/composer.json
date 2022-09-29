@@ -1,0 +1,18 @@
+{
+    "description": "",
+    "type": "neos-package",
+    "name": "networkteam/neos-pencilcase",
+    "require": {
+        "neos/flow": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Networkteam\\Neos\\PencilCase\\": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Networkteam.Neos.PencilCase"
+        }
+    }
+}
