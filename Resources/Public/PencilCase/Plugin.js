@@ -37225,6 +37225,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+// - violet:
+//		 type: button
+//		 label: Highlight
+//		 component: span
+//		 attributes:
+//		 	class: 'highlight'
 var Example = function (_Plugin) {
   _inherits(Example, _Plugin);
 
@@ -37306,6 +37312,8 @@ __webpack_require__(/*! ./manifest */ "./src/manifest.js");
 "use strict";
 
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _neosUiExtensibility = __webpack_require__(/*! @neos-project/neos-ui-extensibility */ "./node_modules/@neos-project/neos-ui-extensibility/dist/index.js");
 
 var _neosUiExtensibility2 = _interopRequireDefault(_neosUiExtensibility);
@@ -37321,6 +37329,8 @@ var _ExampleButton = __webpack_require__(/*! ./ExampleButton */ "./src/ExampleBu
 var _ExampleButton2 = _interopRequireDefault(_ExampleButton);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 // addExamplePlugin gets passed two parameters:
 // - `ckEditorConfiguration` contains the so-far built CKEditor configuration.
@@ -37339,21 +37349,74 @@ var addExamplePlugin = function addExamplePlugin(ckEditorConfiguration, options)
   return ckEditorConfiguration;
 };
 
-(0, _neosUiExtensibility2.default)('Networkteam.Neos.PencilCase:PencilCase', {}, function (globalRegistry) {
+(0, _neosUiExtensibility2.default)('Networkteam.Neos.PencilCase:PencilCase', {}, function (globalRegistry, _ref) {
+  var frontendConfiguration = _ref.frontendConfiguration;
+
   var richtextToolbar = globalRegistry.get('ckEditor5').get('richtextToolbar');
 
-  richtextToolbar.set('exampleExtension', {
-    // the command name must match the command in examplePlugin.js this.editor.commands.add(...)
-    commandName: 'highlightCommand',
-    // the path in isActive must match the commandName from the line above, to ensure the active state
-    // of the button automatically toggles.
-    isActive: (0, _plowJs.$get)('highlightCommand'),
-    isVisible: (0, _plowJs.$get)(['formatting', 'Networkteam.Neos.PencilCase:PencilCase']),
+  var configCke = globalRegistry.get('ckEditor5').get('config');
+  var pencilCase = frontendConfiguration['Networkteam.Neos.PencilCase'];
 
-    component: _ExampleButton2.default,
-    icon: 'plus-square',
-    tooltip: 'Mark a span'
-  }, 'before strong');
+  configCke.set('configureHeadings', function (config) {
+    var additionalOptions = Object.keys(pencilCase.style).map(function (model) {
+      return {
+        model: model,
+        view: {
+          name: pencilCase.style[model].element,
+          attributes: pencilCase.style[model].attributes
+        },
+        title: pencilCase.style[model].title,
+        class: 'ck-heading_heading_' + model,
+
+        // It needs to be converted before the standard 'heading2'.
+        converterPriority: 'high'
+      };
+    });
+
+    return _extends({}, config, {
+      heading: {
+        options: [].concat(_toConsumableArray(additionalOptions))
+      }
+    });
+  });
+
+  // Example of custom headline
+  // Don't forget about updating the config registry with relevant config
+  // @see https://docs.ckeditor.com/ckeditor5/latest/features/headings.html
+  //
+  Object.keys(pencilCase.style).forEach(function (model) {
+    richtextToolbar.set('style/' + model, {
+      commandName: 'heading',
+      commandArgs: [{
+        value: model
+      }],
+      label: pencilCase.style[model].title,
+      isVisible: (0, _plowJs.$get)('formatting.' + model),
+      isActive: function isActive(formattingUnderCursor) {
+        return (0, _plowJs.$get)('heading', formattingUnderCursor) === model;
+      }
+    });
+  });
+
+  // richtextToolbar.set(
+  //   'exampleExtension',
+  //   {
+  //     // the command name must match the command in examplePlugin.js this.editor.commands.add(...)
+  //     commandName: 'highlightCommand',
+  //     // the path in isActive must match the commandName from the line above, to ensure the active state
+  //     // of the button automatically toggles.
+  //     isActive: $get('highlightCommand'),
+  //     isVisible: $get([
+  //       'formatting',
+  //       'Networkteam.Neos.PencilCase:PencilCase',
+  //     ]),
+
+  //     component: ExampleButton,
+  //     icon: 'plus-square',
+  //     tooltip: 'Mark a span',
+  //   },
+  //   'before strong'
+  // );
 
   var config = globalRegistry.get('ckEditor5').get('config');
 

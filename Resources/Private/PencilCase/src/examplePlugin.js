@@ -1,6 +1,13 @@
 import { Plugin } from 'ckeditor5-exports';
 import AttributeCommand from '@ckeditor/ckeditor5-basic-styles/src/attributecommand';
 
+
+// - violet:
+//		 type: button
+//		 label: Highlight
+//		 component: span
+//		 attributes:
+//		 	class: 'highlight'
 export default class Example extends Plugin {
   static get pluginName() {
     return 'exampleExtension';

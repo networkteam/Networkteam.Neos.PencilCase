@@ -7,4 +7,17 @@ Neos:
             resource: resource://Networkteam.Neos.PencilCase/Public/PencilCase/Plugin.js
       frontendConfiguration:
         Networkteam.Neos.PencilCase:
-          fancy: true
+          style: # present dropdown in ckeditor toolbar, Heading 1, Paragraph, Pre etc.
+            fancy:
+              title: 'Fancy'
+              element: 'span'
+              attributes:
+                class: 'fancy'
+                data-nwt-plugin: 'nwt.awesomeSpecialTextEffect'
+                style: 'color: tomato;'
+          buttons:
+            violet:
+              title: Highlight
+              element: span
+              attributes:
+                class: 'highlight'
