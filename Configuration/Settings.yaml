@@ -1,0 +1,7 @@
+Neos:
+  Neos:
+    Ui:
+      resources:
+        javascript:
+          'Networkteam.Neos.PencilCase:PencilCase':
+            resource: resource://Networkteam.Neos.PencilCase/Public/PencilCase/Plugin.js

@@ -1,0 +1,18 @@
+{
+  "description": "",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "neos-react-scripts build",
+    "watch": "neos-react-scripts watch"
+  },
+  "devDependencies": {
+    "@neos-project/neos-ui-extensibility": "^8.0.0"
+  },
+  "neos": {
+    "buildTargetDirectory": "../../Public/PencilCase"
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-basic-styles": "^10.1.0"
+  }
+}
