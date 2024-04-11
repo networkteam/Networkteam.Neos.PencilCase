@@ -13,14 +13,16 @@ export default (identifier, optionConfig) =>
         isFormatting: true,
       });
 
-      const { class: classes, styles, ...rest} = optionConfig.attributes;
+      const { class: classes, styles, ...rest } = optionConfig.attributes;
       const config = {
         // the name of the model must match the "allowAttribute" from above.
         model: attributeIdentifier,
         view: {
           name: optionConfig.tagName || "span",
-          classes,
-          styles,
+          // TODO: check if classes is an array
+          classes: classes && [classes],
+          // TODO: check if styles is an object
+          styles: styles && styles,
           attributes: rest,
         },
       };

@@ -1892,8 +1892,10 @@
             model: attributeIdentifier,
             view: {
               name: optionConfig.tagName || "span",
-              classes,
-              styles,
+              // TODO: check if classes is an array
+              classes: classes && [classes],
+              // TODO: check if styles is an object
+              styles: styles && styles,
               attributes: rest
             }
           };
@@ -2012,8 +2014,10 @@
                     model: identifier,
                     view: {
                       name: optionConfig.tagName,
-                      classes,
-                      styles,
+                      // TODO: check if classes is an array
+                      classes: classes && [classes],
+                      // TODO: check if styles is an object
+                      styles: styles && styles,
                       attributes: rest
                     },
                     title: optionConfig.label,
