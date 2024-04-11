@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { IconButton } from '@neos-project/react-ui-components';
 import { neos } from '@neos-project/neos-ui-decorators';
@@ -8,7 +8,7 @@ import { executeCommand } from '@neos-project/neos-ui-ckeditor5-bindings';
 @neos((globalRegistry) => ({
   i18nRegistry: globalRegistry.get('i18n'),
 }))
-export default class ExampleButton extends Component {
+export default class ExampleButton extends PureComponent {
   static propTypes = {
     i18nRegistry: PropTypes.object,
     tooltip: PropTypes.string,
@@ -16,8 +16,7 @@ export default class ExampleButton extends Component {
   };
 
   handleClick = () => {
-    // this command name must match the identifier of the command from examplePlugin.js, this.editor.commands.add(...)
-    executeCommand('highlightCommand');
+    executeCommand("pencilCaseCommand:" + this.props.optionIdentifier);
   };
 
   render() {
