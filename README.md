@@ -1,4 +1,4 @@
-# Networkteam.Neos.PencilBag
+# Networkteam.Neos.PencilCase
 
 Customize your CKeditor using a yaml file
 
