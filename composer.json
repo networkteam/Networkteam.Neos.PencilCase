@@ -1,7 +1,7 @@
 {
     "description": "",
     "type": "neos-package",
-    "name": "networkteam/neos-pencilcase",
+    "name": "networkteam/networkteam-neos-pencilcase",
     "require": {
         "neos/flow": "*",
         "neos/neos-ui": "*"
