@@ -1,6 +1,7 @@
 import manifest from "@neos-project/neos-ui-extensibility";
 import { $get } from "plow-js";
 import PencilCasePlugin from "./pencilCasePlugin";
+import AttributePlugin from "./AttributePlugin";
 import PencilCaseButton from "./PencilCaseButton";
 
 manifest(
@@ -109,6 +110,27 @@ manifest(
             return ckEditorConfiguration;
           }
         );
+
+        Object.keys(optionConfig.editableAttributes).map((attributeKey) => {
+          const attributeValue = optionConfig.editableAttributes[attributeKey];
+
+          config.set(
+            `Networkteam.Neos.PencilCase:AttributePlugin_${identifier}_${attributeKey}`,
+            (ckEditorConfiguration) => {
+              ckEditorConfiguration.plugins =
+                ckEditorConfiguration.plugins || [];
+              ckEditorConfiguration.plugins.push(
+                AttributePlugin(
+                  identifier,
+                  optionConfig.tagName,
+                  attributeKey,
+                  attributeValue
+                )
+              );
+              return ckEditorConfiguration;
+            }
+          );
+        });
       });
     }
   }

@@ -5,6 +5,9 @@ Neos:
         javascript:
           'Networkteam.Neos.PencilCase:PencilCase':
             resource: resource://Networkteam.Neos.PencilCase/Public/PencilCase/Plugin.js
+        stylesheets:
+          'Networkteam.Neos.PencilCase:PencilCase':
+            resource: resource://Networkteam.Neos.PencilCase/Public/PencilCase/Plugin.css
       frontendConfiguration:
         Networkteam.Neos.PencilCase:
           headingOptions: # present dropdown in ckeditor toolbar, Heading 1, Paragraph, Pre etc.

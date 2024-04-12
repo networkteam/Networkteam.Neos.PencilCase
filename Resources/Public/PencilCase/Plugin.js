@@ -1909,6 +1909,119 @@
     }
   });
 
+  // node_modules/@ckeditor/ckeditor5-core/src/plugin.js
+  var Plugin2;
+  var init_plugin = __esm({
+    "node_modules/@ckeditor/ckeditor5-core/src/plugin.js"() {
+      init_observablemixin();
+      init_mix();
+      Plugin2 = class {
+        /**
+         * @inheritDoc
+         */
+        constructor(editor) {
+          this.editor = editor;
+        }
+        /**
+         * @inheritDoc
+         */
+        destroy() {
+          this.stopListening();
+        }
+      };
+      mix(Plugin2, observablemixin_default);
+    }
+  });
+
+  // src/PencilCaseAttributeCommand.js
+  var PencilCaseAttributeCommand;
+  var init_PencilCaseAttributeCommand = __esm({
+    "src/PencilCaseAttributeCommand.js"() {
+      init_command();
+      PencilCaseAttributeCommand = class extends Command {
+        constructor(editor, attributeKey) {
+          super(editor);
+          this.attributeKey = attributeKey;
+        }
+        refresh() {
+          const { document, schema } = this.editor.model;
+          this.value = document.selection.getAttribute(this.attributeKey);
+          this.isEnabled = schema.checkAttributeInSelection(
+            document.selection,
+            this.attributeKey
+          );
+        }
+        execute(value) {
+          const model = this.editor.model;
+          const doc = model.document;
+          const selection = doc.selection;
+          const toggleMode = value === void 0;
+          value = toggleMode ? !this.value : value;
+          console.log("PencilCaseAttributeCommand.execute", value);
+          model.change((writer) => {
+            if (!selection.isCollapsed) {
+              const ranges = model.schema.getValidRanges(
+                selection.getRanges(),
+                this.attributeKey
+              );
+              console.log(ranges);
+              for (const range of ranges) {
+                if (value) {
+                  writer.setAttribute(this.attributeKey, value, range);
+                } else {
+                  writer.removeAttribute(this.attributeKey, range);
+                }
+              }
+            }
+            if (value) {
+              return writer.setSelectionAttribute(this.attributeKey, true);
+            }
+            return writer.removeSelectionAttribute(this.attributeKey);
+          });
+        }
+      };
+    }
+  });
+
+  // src/AttributePlugin.js
+  var AttributePlugin_default;
+  var init_AttributePlugin = __esm({
+    "src/AttributePlugin.js"() {
+      init_plugin();
+      init_PencilCaseAttributeCommand();
+      AttributePlugin_default = (identifier, tagName, attributeKey, attributeValue) => class AttributePlugin extends Plugin2 {
+        init() {
+          const attributeIdentifier = `PencilCaseEditableAttribute_${identifier}_${attributeKey}`;
+          this.editor.model.schema.extend("$text", {
+            allowAttributes: attributeIdentifier
+          });
+          this.editor.conversion.for("downcast").attributeToElement({
+            model: attributeIdentifier,
+            view: (value, writer) => writer.createAttributeElement(
+              tagName,
+              {
+                [attributeKey]: value
+              }
+            )
+          });
+          this.editor.conversion.for("upcast").elementToAttribute({
+            view: {
+              name: tagName,
+              attributes: {
+                [attributeKey]: attributeValue
+              }
+            },
+            model: {
+              key: attributeIdentifier,
+              value: (viewElement) => viewElement.getAttribute(attributeKey)
+            }
+          });
+          this.editor.commands.add(attributeIdentifier, new PencilCaseAttributeCommand(this.editor, attributeIdentifier));
+        }
+      };
+    }
+  });
+
   // node_modules/@neos-project/neos-ui-extensibility/dist/shims/vendor/react/index.js
   var require_react = __commonJS({
     "node_modules/@neos-project/neos-ui-extensibility/dist/shims/vendor/react/index.js"(exports2, module2) {
@@ -1949,20 +2062,37 @@
     }
   });
 
+  // src/PencilCaseButton.module.css
+  var _default;
+  var init_ = __esm({
+    "src/PencilCaseButton.module.css"() {
+      _default = {};
+    }
+  });
+
   // src/PencilCaseButton.js
-  var import_react, import_prop_types, import_react_ui_components, import_neos_ui_decorators, import_neos_ui_ckeditor5_bindings, ExampleButton;
+  var import_react, import_prop_types, import_react_ui_components, import_neos_ui_decorators, import_react_ui_components2, import_neos_ui_ckeditor5_bindings, ExampleButton;
   var init_PencilCaseButton = __esm({
     "src/PencilCaseButton.js"() {
       import_react = __toESM(require_react());
       import_prop_types = __toESM(require_prop_types());
       import_react_ui_components = __toESM(require_react_ui_components());
       import_neos_ui_decorators = __toESM(require_neos_ui_decorators());
+      import_react_ui_components2 = __toESM(require_react_ui_components());
       import_neos_ui_ckeditor5_bindings = __toESM(require_neos_ui_ckeditor5_bindings());
+      init_();
       ExampleButton = class extends import_react.PureComponent {
         constructor() {
           super(...arguments);
           this.handleClick = () => {
             (0, import_neos_ui_ckeditor5_bindings.executeCommand)("pencilCaseCommand:" + this.props.optionIdentifier);
+          };
+          this.handleAttributeChange = (value, attributeKey) => {
+            (0, import_neos_ui_ckeditor5_bindings.executeCommand)(
+              `PencilCaseEditableAttribute_${this.props.optionIdentifier}_${attributeKey}`,
+              value,
+              false
+            );
           };
         }
         render() {
@@ -1972,7 +2102,24 @@
             title: this.props.i18nRegistry.translate(this.props.tooltip),
             icon: this.props.icon
           };
-          return /* @__PURE__ */ import_react.default.createElement(import_react_ui_components.IconButton, { ...props });
+          return /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement(import_react_ui_components.IconButton, { ...props }), this.props.optionConfiguration?.editableAttributes && /* @__PURE__ */ import_react.default.createElement("div", { className: _default.pencilCaseButton__flyout }, Object.keys(this.props.optionConfiguration.editableAttributes).map(
+            (attributeKey) => /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement(
+              "label",
+              null,
+              attributeKey
+            ), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement(
+              import_react_ui_components2.TextInput,
+              {
+                value: this.getAttributeValue(attributeKey) || "",
+                onChange: (value) => {
+                  this.handleAttributeChange(value, attributeKey);
+                }
+              }
+            )))
+          )));
+        }
+        getAttributeValue(attributeKey) {
+          return this.props.formattingUnderCursor?.[`PencilCaseEditableAttribute_${this.props.optionIdentifier}_${attributeKey}`];
         }
       };
       ExampleButton.propTypes = {
@@ -1996,6 +2143,7 @@
       init_dist();
       import_plow_js = __toESM(require_plow_js());
       init_pencilCasePlugin();
+      init_AttributePlugin();
       init_PencilCaseButton();
       dist_default(
         "Networkteam.Neos.PencilCase:PencilCase",
@@ -2088,6 +2236,24 @@
                   return ckEditorConfiguration;
                 }
               );
+              Object.keys(optionConfig.editableAttributes).map((attributeKey) => {
+                const attributeValue = optionConfig.editableAttributes[attributeKey];
+                config.set(
+                  `Networkteam.Neos.PencilCase:AttributePlugin_${identifier}_${attributeKey}`,
+                  (ckEditorConfiguration) => {
+                    ckEditorConfiguration.plugins = ckEditorConfiguration.plugins || [];
+                    ckEditorConfiguration.plugins.push(
+                      AttributePlugin_default(
+                        identifier,
+                        optionConfig.tagName,
+                        attributeKey,
+                        attributeValue
+                      )
+                    );
+                    return ckEditorConfiguration;
+                  }
+                );
+              });
             });
           }
         }
@@ -2166,6 +2332,12 @@ lodash-es/lodash.js:
    *)
 
 @ckeditor/ckeditor5-basic-styles/src/attributecommand.js:
+  (**
+   * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+   * For licensing, see LICENSE.md.
+   *)
+
+@ckeditor/ckeditor5-core/src/plugin.js:
   (**
    * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
    * For licensing, see LICENSE.md.
