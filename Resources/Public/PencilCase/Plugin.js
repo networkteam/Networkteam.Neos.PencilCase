@@ -2071,7 +2071,7 @@
   });
 
   // src/PencilCaseButton.js
-  var import_react, import_prop_types, import_react_ui_components, import_neos_ui_decorators, import_react_ui_components2, import_neos_ui_ckeditor5_bindings, ExampleButton;
+  var import_react, import_prop_types, import_react_ui_components, import_neos_ui_decorators, import_react_ui_components2, import_neos_ui_ckeditor5_bindings, PencilCaseButton;
   var init_PencilCaseButton = __esm({
     "src/PencilCaseButton.js"() {
       import_react = __toESM(require_react());
@@ -2081,7 +2081,7 @@
       import_react_ui_components2 = __toESM(require_react_ui_components());
       import_neos_ui_ckeditor5_bindings = __toESM(require_neos_ui_ckeditor5_bindings());
       init_();
-      ExampleButton = class extends import_react.PureComponent {
+      PencilCaseButton = class extends import_react.PureComponent {
         constructor() {
           super(...arguments);
           this.handleClick = () => {
@@ -2122,16 +2122,16 @@
           return this.props.formattingUnderCursor?.[`PencilCaseEditableAttribute_${this.props.optionIdentifier}_${attributeKey}`];
         }
       };
-      ExampleButton.propTypes = {
+      PencilCaseButton.propTypes = {
         i18nRegistry: import_prop_types.default.object,
         tooltip: import_prop_types.default.string,
         isActive: import_prop_types.default.boolean
       };
-      ExampleButton = __decorateClass([
+      PencilCaseButton = __decorateClass([
         (0, import_neos_ui_decorators.neos)((globalRegistry) => ({
           i18nRegistry: globalRegistry.get("i18n")
         }))
-      ], ExampleButton);
+      ], PencilCaseButton);
     }
   });
 
@@ -2218,7 +2218,7 @@
                   commandName,
                   isActive: (0, import_plow_js.$get)(commandName),
                   isVisible: (0, import_plow_js.$get)(["formatting", identifier]),
-                  component: ExampleButton,
+                  component: PencilCaseButton,
                   icon: optionConfig.icon,
                   tooltip: optionConfig.tooltip,
                   optionIdentifier: identifier,

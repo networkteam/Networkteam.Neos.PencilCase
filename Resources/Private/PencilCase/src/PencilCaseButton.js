@@ -10,7 +10,7 @@ import style from "./PencilCaseButton.module.css";
 @neos((globalRegistry) => ({
   i18nRegistry: globalRegistry.get("i18n"),
 }))
-export default class ExampleButton extends PureComponent {
+export default class PencilCaseButton extends PureComponent {
   static propTypes = {
     i18nRegistry: PropTypes.object,
     tooltip: PropTypes.string,
