@@ -1,11 +1,15 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { IconButton } from "@neos-project/react-ui-components";
+import {
+  IconButton,
+  TextInput,
+  DropDown,
+} from "@neos-project/react-ui-components";
 import { neos } from "@neos-project/neos-ui-decorators";
-import { TextInput } from "@neos-project/react-ui-components";
 
 import { executeCommand } from "@neos-project/neos-ui-ckeditor5-bindings";
-import style from "./PencilCaseButton.module.css";
+
+import "./styles.module.css";
 
 @neos((globalRegistry) => ({
   i18nRegistry: globalRegistry.get("i18n"),
@@ -15,6 +19,11 @@ export default class PencilCaseButton extends PureComponent {
     i18nRegistry: PropTypes.object,
     tooltip: PropTypes.string,
     isActive: PropTypes.boolean,
+    isOpen: PropTypes.boolean,
+  };
+
+  state = {
+    isOpen: false,
   };
 
   handleClick = () => {
@@ -22,11 +31,24 @@ export default class PencilCaseButton extends PureComponent {
   };
 
   handleAttributeChange = (value, attributeKey) => {
+    console.log(value);
     executeCommand(
       `PencilCaseEditableAttribute_${this.props.optionIdentifier}_${attributeKey}`,
       value,
       false
     );
+  };
+
+  componentWillReceiveProps = (nextProps) => {
+    if (!nextProps.isActive) {
+      {
+        Object.keys(this.props.optionConfiguration.editableAttributes).map(
+          (attributeKey) => {
+            this.handleAttributeChange("", attributeKey);
+          }
+        );
+      }
+    }
   };
 
   render() {
@@ -37,16 +59,46 @@ export default class PencilCaseButton extends PureComponent {
       icon: this.props.icon,
     };
 
+    console.log(this.props);
+
     return (
-      <div>
-        <IconButton {...props} />
-        {this.props.optionConfiguration?.editableAttributes && (
-          <div className={style.pencilCaseButton__flyout}>
+      <DropDown.Stateless
+        className="pencilCaseDropdown"
+        isOpen={this.state.isOpen}
+        onToggle={() => console.log("TOGGLE")}
+        onClose={() => console.log("CLOSE")}
+        onMouseEnter={() => this.setState({ isOpen: true })}
+        onMouseLeave={() => this.setState({ isOpen: false })}
+        padded={false}
+      >
+        <DropDown.Header
+          shouldKeepFocusState={false}
+          showDropDownToggle={false}
+        >
+          <IconButton {...props} />
+        </DropDown.Header>
+        <DropDown.Contents scrollable={true}>
+          <ul
+            style={{
+              position: "fixed",
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
+              zIndex: 1,
+              width: 320,
+              backgroundColor: "#222",
+              border: "8px solid #222",
+            }}
+          >
             {Object.keys(this.props.optionConfiguration.editableAttributes).map(
               (attributeKey) => (
-                <div>
+                <li>
                   <label
-                  // htmlFor="__neos__linkEditor--title"
+                    htmlFor={`__neos__pencilCase-attribute--${attributeKey}`}
+                    style={{
+                      display: "block",
+                      marginBottom: 4,
+                    }}
                   >
                     {/* {i18nRegistry.translate(
                 "Neos.Neos.Ui:Main:ckeditor__toolbar__link__title",
@@ -56,7 +108,7 @@ export default class PencilCaseButton extends PureComponent {
                   </label>
                   <div>
                     <TextInput
-                      // id="__neos__linkEditor--title"
+                      id={`__neos__pencilCase-attribute--${attributeKey}`}
                       value={this.getAttributeValue(attributeKey) || ""}
                       // placeholder={i18nRegistry.translate(
                       //   "Neos.Neos.Ui:Main:ckeditor__toolbar__link__titlePlaceholder",
@@ -67,12 +119,12 @@ export default class PencilCaseButton extends PureComponent {
                       }}
                     />
                   </div>
-                </div>
+                </li>
               )
             )}
-          </div>
-        )}
-      </div>
+          </ul>
+        </DropDown.Contents>
+      </DropDown.Stateless>
     );
   }
 

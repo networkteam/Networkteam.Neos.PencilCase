@@ -22,11 +22,13 @@ Neos:
           customOptions:
             violet:
               tooltip: Highlight
+              icon: rocket
               tagName: span
-              icon: 'rocket'
               attributes:
                 class: 'highlight'
                 styles:
                   background: violet
               editableAttributes:
                 id: true
+                data-test: true
+                title: true

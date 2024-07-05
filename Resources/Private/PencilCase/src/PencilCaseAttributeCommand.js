@@ -27,17 +27,14 @@ export default class PencilCaseAttributeCommand extends Command {
     const toggleMode = value === undefined;
     value = toggleMode ? !this.value : value;
 
-    console.log("PencilCaseAttributeCommand.execute", value);
-
     model.change((writer) => {
-      
       if (!selection.isCollapsed) {
         const ranges = model.schema.getValidRanges(
           selection.getRanges(),
           this.attributeKey
         );
 
-        console.log(ranges)
+        console.log(ranges);
 
         for (const range of ranges) {
           if (value) {
@@ -48,8 +45,10 @@ export default class PencilCaseAttributeCommand extends Command {
         }
       }
 
+      console.log("Changed value: ", this.attributeKey, value);
+
       if (value) {
-        return writer.setSelectionAttribute(this.attributeKey, true);
+        return writer.setSelectionAttribute(this.attributeKey, value);
       }
 
       return writer.removeSelectionAttribute(this.attributeKey);

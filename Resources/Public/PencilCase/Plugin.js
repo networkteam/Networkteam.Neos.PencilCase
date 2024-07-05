@@ -1957,7 +1957,6 @@
           const selection = doc.selection;
           const toggleMode = value === void 0;
           value = toggleMode ? !this.value : value;
-          console.log("PencilCaseAttributeCommand.execute", value);
           model.change((writer) => {
             if (!selection.isCollapsed) {
               const ranges = model.schema.getValidRanges(
@@ -1973,8 +1972,9 @@
                 }
               }
             }
+            console.log("Changed value: ", this.attributeKey, value);
             if (value) {
-              return writer.setSelectionAttribute(this.attributeKey, true);
+              return writer.setSelectionAttribute(this.attributeKey, value);
             }
             return writer.removeSelectionAttribute(this.attributeKey);
           });
@@ -2062,37 +2062,49 @@
     }
   });
 
-  // src/PencilCaseButton.module.css
-  var _default;
+  // src/styles.module.css
   var init_ = __esm({
-    "src/PencilCaseButton.module.css"() {
-      _default = {};
+    "src/styles.module.css"() {
     }
   });
 
   // src/PencilCaseButton.js
-  var import_react, import_prop_types, import_react_ui_components, import_neos_ui_decorators, import_react_ui_components2, import_neos_ui_ckeditor5_bindings, PencilCaseButton;
+  var import_react, import_prop_types, import_react_ui_components, import_neos_ui_decorators, import_neos_ui_ckeditor5_bindings, PencilCaseButton;
   var init_PencilCaseButton = __esm({
     "src/PencilCaseButton.js"() {
       import_react = __toESM(require_react());
       import_prop_types = __toESM(require_prop_types());
       import_react_ui_components = __toESM(require_react_ui_components());
       import_neos_ui_decorators = __toESM(require_neos_ui_decorators());
-      import_react_ui_components2 = __toESM(require_react_ui_components());
       import_neos_ui_ckeditor5_bindings = __toESM(require_neos_ui_ckeditor5_bindings());
       init_();
       PencilCaseButton = class extends import_react.PureComponent {
         constructor() {
           super(...arguments);
+          this.state = {
+            isOpen: false
+          };
           this.handleClick = () => {
             (0, import_neos_ui_ckeditor5_bindings.executeCommand)("pencilCaseCommand:" + this.props.optionIdentifier);
           };
           this.handleAttributeChange = (value, attributeKey) => {
+            console.log(value);
             (0, import_neos_ui_ckeditor5_bindings.executeCommand)(
               `PencilCaseEditableAttribute_${this.props.optionIdentifier}_${attributeKey}`,
               value,
               false
             );
+          };
+          this.componentWillReceiveProps = (nextProps) => {
+            if (!nextProps.isActive) {
+              {
+                Object.keys(this.props.optionConfiguration.editableAttributes).map(
+                  (attributeKey) => {
+                    this.handleAttributeChange("", attributeKey);
+                  }
+                );
+              }
+            }
           };
         }
         render() {
@@ -2102,21 +2114,64 @@
             title: this.props.i18nRegistry.translate(this.props.tooltip),
             icon: this.props.icon
           };
-          return /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement(import_react_ui_components.IconButton, { ...props }), this.props.optionConfiguration?.editableAttributes && /* @__PURE__ */ import_react.default.createElement("div", { className: _default.pencilCaseButton__flyout }, Object.keys(this.props.optionConfiguration.editableAttributes).map(
-            (attributeKey) => /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement(
-              "label",
-              null,
-              attributeKey
-            ), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement(
-              import_react_ui_components2.TextInput,
+          console.log(this.props);
+          return /* @__PURE__ */ import_react.default.createElement(
+            import_react_ui_components.DropDown.Stateless,
+            {
+              className: "pencilCaseDropdown",
+              isOpen: this.state.isOpen,
+              onToggle: () => console.log("TOGGLE"),
+              onClose: () => console.log("CLOSE"),
+              onMouseEnter: () => this.setState({ isOpen: true }),
+              onMouseLeave: () => this.setState({ isOpen: false }),
+              padded: false
+            },
+            /* @__PURE__ */ import_react.default.createElement(
+              import_react_ui_components.DropDown.Header,
               {
-                value: this.getAttributeValue(attributeKey) || "",
-                onChange: (value) => {
-                  this.handleAttributeChange(value, attributeKey);
+                shouldKeepFocusState: false,
+                showDropDownToggle: false
+              },
+              /* @__PURE__ */ import_react.default.createElement(import_react_ui_components.IconButton, { ...props })
+            ),
+            /* @__PURE__ */ import_react.default.createElement(import_react_ui_components.DropDown.Contents, { scrollable: true }, /* @__PURE__ */ import_react.default.createElement(
+              "ul",
+              {
+                style: {
+                  position: "fixed",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 16,
+                  zIndex: 1,
+                  width: 320,
+                  backgroundColor: "#222",
+                  border: "8px solid #222"
                 }
-              }
-            )))
-          )));
+              },
+              Object.keys(this.props.optionConfiguration.editableAttributes).map(
+                (attributeKey) => /* @__PURE__ */ import_react.default.createElement("li", null, /* @__PURE__ */ import_react.default.createElement(
+                  "label",
+                  {
+                    htmlFor: `__neos__pencilCase-attribute--${attributeKey}`,
+                    style: {
+                      display: "block",
+                      marginBottom: 4
+                    }
+                  },
+                  attributeKey
+                ), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement(
+                  import_react_ui_components.TextInput,
+                  {
+                    id: `__neos__pencilCase-attribute--${attributeKey}`,
+                    value: this.getAttributeValue(attributeKey) || "",
+                    onChange: (value) => {
+                      this.handleAttributeChange(value, attributeKey);
+                    }
+                  }
+                )))
+              )
+            ))
+          );
         }
         getAttributeValue(attributeKey) {
           return this.props.formattingUnderCursor?.[`PencilCaseEditableAttribute_${this.props.optionIdentifier}_${attributeKey}`];
@@ -2125,7 +2180,8 @@
       PencilCaseButton.propTypes = {
         i18nRegistry: import_prop_types.default.object,
         tooltip: import_prop_types.default.string,
-        isActive: import_prop_types.default.boolean
+        isActive: import_prop_types.default.boolean,
+        isOpen: import_prop_types.default.boolean
       };
       PencilCaseButton = __decorateClass([
         (0, import_neos_ui_decorators.neos)((globalRegistry) => ({
