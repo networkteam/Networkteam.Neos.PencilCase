@@ -2152,7 +2152,7 @@
           const richtextToolbar = globalRegistry.get("ckEditor5").get("richtextToolbar");
           const config = globalRegistry.get("ckEditor5").get("config");
           const pencilCase = frontendConfiguration["Networkteam.Neos.PencilCase"];
-          if (pencilCase && pencilCase.headingOptions) {
+          if (pencilCase?.headingOptions && typeof pencilCase.headingOptions === "object") {
             config.set("configureHeadings", (cfg) => {
               let additionalOptions = Object.keys(pencilCase.headingOptions).map(
                 (identifier) => {
@@ -2207,9 +2207,9 @@
               });
             });
           }
-          if (pencilCase && pencilCase.formattingOptions) {
-            Object.keys(pencilCase.formattingOptions).map((identifier) => {
-              const optionConfig = pencilCase.formattingOptions[identifier];
+          if (pencilCase?.customOptions && typeof pencilCase.customOptions === "object") {
+            Object.keys(pencilCase.customOptions).map((identifier) => {
+              const optionConfig = pencilCase.customOptions[identifier];
               const commandName = "pencilCaseCommand:" + identifier;
               richtextToolbar.set(
                 "PencilCasePlugin_" + identifier,
@@ -2227,7 +2227,7 @@
                 "end"
               );
               config.set(
-                `Networkteam.Neos.PencilCase:FormattingOption_${identifier}`,
+                `Networkteam.Neos.PencilCase:CustomOption_${identifier}`,
                 (ckEditorConfiguration) => {
                   ckEditorConfiguration.plugins = ckEditorConfiguration.plugins || [];
                   ckEditorConfiguration.plugins.push(
@@ -2236,24 +2236,26 @@
                   return ckEditorConfiguration;
                 }
               );
-              Object.keys(optionConfig.editableAttributes).map((attributeKey) => {
-                const attributeValue = optionConfig.editableAttributes[attributeKey];
-                config.set(
-                  `Networkteam.Neos.PencilCase:AttributePlugin_${identifier}_${attributeKey}`,
-                  (ckEditorConfiguration) => {
-                    ckEditorConfiguration.plugins = ckEditorConfiguration.plugins || [];
-                    ckEditorConfiguration.plugins.push(
-                      AttributePlugin_default(
-                        identifier,
-                        optionConfig.tagName,
-                        attributeKey,
-                        attributeValue
-                      )
-                    );
-                    return ckEditorConfiguration;
-                  }
-                );
-              });
+              if (optionConfig.editableAttributes && typeof optionConfig.editableAttributes === "object") {
+                Object.keys(optionConfig.editableAttributes).map((attributeKey) => {
+                  const attributeValue = optionConfig.editableAttributes[attributeKey];
+                  config.set(
+                    `Networkteam.Neos.PencilCase:AttributePlugin_${identifier}_${attributeKey}`,
+                    (ckEditorConfiguration) => {
+                      ckEditorConfiguration.plugins = ckEditorConfiguration.plugins || [];
+                      ckEditorConfiguration.plugins.push(
+                        AttributePlugin_default(
+                          identifier,
+                          optionConfig.tagName,
+                          attributeKey,
+                          attributeValue
+                        )
+                      );
+                      return ckEditorConfiguration;
+                    }
+                  );
+                });
+              }
             });
           }
         }

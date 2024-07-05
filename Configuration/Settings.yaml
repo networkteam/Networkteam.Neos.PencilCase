@@ -19,13 +19,14 @@ Neos:
                 data-nwt-plugin: nwt.awesomeSpecialTextEffect
                 styles:
                   color: tomato
-          formattingOptions:
+          customOptions:
             violet:
               tooltip: Highlight
               tagName: span
               icon: 'rocket'
               attributes:
                 class: 'highlight'
-                id: 'myCoolAnchor'
                 styles:
                   background: violet
+              editableAttributes:
+                id: true
