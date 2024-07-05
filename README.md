@@ -16,7 +16,7 @@ Neos:
               attributes:
                 class: fancy
                 data-nwt-plugin: nwt.awesomeSpecialTextEffect
-                styles:
+                style:
                   color: tomato
           # customOptions will be added as buttons
           customOptions:
@@ -26,10 +26,10 @@ Neos:
               tagName: span
               attributes:             # are fixed when set in config
                 class: 'highlight'
-                styles:
+                style:
                   background: violet
               editableAttributes:     # will be editable inside ckEditor
-                id: true              # set a custom anchor inside your copytext 
+                id: true              # set a custom anchor inside your copytext
                 data-test: true       # add information to certain parts of copytext
                 title: true           # native tooltip
 ```
