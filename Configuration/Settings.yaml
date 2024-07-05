@@ -10,25 +10,5 @@ Neos:
             resource: resource://Networkteam.Neos.PencilCase/Public/PencilCase/Plugin.css
       frontendConfiguration:
         Networkteam.Neos.PencilCase:
-          headingOptions: # present dropdown in ckeditor toolbar, Heading 1, Paragraph, Pre etc.
-            fancy:
-              label: Fancy
-              tagName: span
-              attributes:
-                class: fancy
-                data-nwt-plugin: nwt.awesomeSpecialTextEffect
-                styles:
-                  color: tomato
+          headingOptions:
           customOptions:
-            violet:
-              tooltip: Highlight
-              icon: rocket
-              tagName: span
-              attributes:
-                class: 'highlight'
-                styles:
-                  background: violet
-              editableAttributes:
-                id: true
-                data-test: true
-                title: true
