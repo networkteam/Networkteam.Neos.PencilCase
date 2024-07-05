@@ -1,19 +1,20 @@
 import Command from "@ckeditor/ckeditor5-core/src/command";
 
 export default class PencilCaseAttributeCommand extends Command {
-  constructor(editor, attributeKey) {
+  constructor(editor, attributeKey, attributeIdentifier) {
     super(editor);
 
     this.attributeKey = attributeKey;
+    this.attributeIdentifier = attributeIdentifier;
   }
 
   refresh() {
     const { document, schema } = this.editor.model;
 
-    // Check if selection is already highlighted.
+    // Check if selection already has the editable attribute
     this.value = document.selection.getAttribute(this.attributeKey);
 
-    // Check if command is allowed on current selection.
+    // Check if command is allowed on current selection
     this.isEnabled = schema.checkAttributeInSelection(
       document.selection,
       this.attributeKey
@@ -22,36 +23,33 @@ export default class PencilCaseAttributeCommand extends Command {
 
   execute(value) {
     const model = this.editor.model;
-    const doc = model.document;
-    const selection = doc.selection;
-    const toggleMode = value === undefined;
-    value = toggleMode ? !this.value : value;
+    const document = model.document;
+    const selection = document.selection;
 
     model.change((writer) => {
-      if (!selection.isCollapsed) {
-        const ranges = model.schema.getValidRanges(
-          selection.getRanges(),
-          this.attributeKey
-        );
+      // In this case it doesn't matter if the selection is collapsed or not, we always need to find the full range of the element
+      const firstPosition = selection.getFirstPosition();
+      const lastPosition = selection.getLastPosition();
 
-        console.log(ranges);
+      const isSameElement = (value) =>
+        value.item.getAttribute(this.attributeIdentifier);
 
-        for (const range of ranges) {
-          if (value) {
-            writer.setAttribute(this.attributeKey, value, range);
-          } else {
-            writer.removeAttribute(this.attributeKey, range);
-          }
+      const startPosition = firstPosition.getLastMatchingPosition(
+        isSameElement,
+        {
+          direction: "backward",
         }
-      }
-
-      console.log("Changed value: ", this.attributeKey, value);
+      );
+      const endPosition = lastPosition.getLastMatchingPosition(isSameElement);
+      const range = writer.createRange(startPosition, endPosition);
 
       if (value) {
-        return writer.setSelectionAttribute(this.attributeKey, value);
+        writer.setAttribute(this.attributeKey, value, range);
+        writer.setSelectionAttribute(this.attributeKey, value);
+      } else {
+        writer.removeAttribute(this.attributeKey, range);
+        writer.removeSelectionAttribute(this.attributeKey);
       }
-
-      return writer.removeSelectionAttribute(this.attributeKey);
     });
   }
 }

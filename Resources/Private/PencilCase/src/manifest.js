@@ -1,8 +1,9 @@
 import manifest from "@neos-project/neos-ui-extensibility";
 import { $get } from "plow-js";
-import PencilCasePlugin from "./pencilCasePlugin";
+import PencilCasePlugin from "./PencilCasePlugin";
 import AttributePlugin from "./AttributePlugin";
 import PencilCaseButton from "./PencilCaseButton";
+import { getAttributes, getClasses, getStyles } from "./utils";
 
 manifest(
   "Networkteam.Neos.PencilCase:PencilCase",
@@ -20,20 +21,17 @@ manifest(
       typeof pencilCase.headingOptions === "object"
     ) {
       config.set("configureHeadings", (cfg) => {
-        let additionalOptions = Object.keys(pencilCase.headingOptions).map(
+        const additionalOptions = Object.keys(pencilCase.headingOptions).map(
           (identifier) => {
             const optionConfig = pencilCase.headingOptions[identifier];
-            const { class: classes, styles, ...rest } = optionConfig.attributes;
 
             return {
               model: identifier,
               view: {
                 name: optionConfig.tagName,
-                // TODO: check if classes is an array
-                classes: classes && [classes],
-                // TODO: check if styles is an object
-                styles: styles && styles,
-                attributes: rest,
+                classes: getClasses(optionConfig.attributes),
+                styles: getStyles(optionConfig.attributes),
+                attributes: getAttributes(optionConfig.attributes),
               },
               title: optionConfig.label,
               class: "ck-heading_heading_" + identifier,
@@ -64,7 +62,7 @@ manifest(
         return Object.assign(cfg, headingConfig);
       });
 
-      Object.keys(pencilCase.headingOptions).forEach((identifier) => {
+      for (const identifier in pencilCase.headingOptions) {
         richtextToolbar.set("style/" + identifier, {
           commandName: "heading",
           commandArgs: [
@@ -77,7 +75,7 @@ manifest(
           isActive: (formattingUnderCursor) =>
             $get("heading", formattingUnderCursor) === identifier,
         });
-      });
+      }
     }
 
     // Add custom formatting options
@@ -85,14 +83,13 @@ manifest(
       pencilCase?.customOptions &&
       typeof pencilCase.customOptions === "object"
     ) {
-      Object.keys(pencilCase.customOptions).map((identifier) => {
+      for (const identifier in pencilCase.customOptions) {
         const optionConfig = pencilCase.customOptions[identifier];
         const commandName = "pencilCaseCommand:" + identifier;
 
         richtextToolbar.set(
           "PencilCasePlugin_" + identifier,
           {
-            // the command name must match the command in examplePlugin.js this.editor.commands.add(...)
             commandName: commandName,
             isActive: $get(commandName),
             isVisible: $get(["formatting", identifier]),
@@ -121,7 +118,7 @@ manifest(
           optionConfig.editableAttributes &&
           typeof optionConfig.editableAttributes === "object"
         ) {
-          Object.keys(optionConfig.editableAttributes).map((attributeKey) => {
+          for (const attributeKey in optionConfig.editableAttributes) {
             const attributeValue =
               optionConfig.editableAttributes[attributeKey];
 
@@ -141,9 +138,9 @@ manifest(
                 return ckEditorConfiguration;
               }
             );
-          });
+          }
         }
-      });
+      }
     }
   }
 );

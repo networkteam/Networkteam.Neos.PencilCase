@@ -1,5 +1,6 @@
 import { Plugin } from "ckeditor5-exports";
-import AttributeCommand from "@ckeditor/ckeditor5-basic-styles/src/attributecommand";
+import PencilCaseCommand from "./PencilCaseCommand";
+import { getAttributes, getClasses, getStyles } from "./utils";
 
 export default (identifier, optionConfig) =>
   class PencilCasePlugin extends Plugin {
@@ -13,17 +14,14 @@ export default (identifier, optionConfig) =>
         isFormatting: true,
       });
 
-      const { class: classes, styles, ...rest } = optionConfig.attributes;
       const config = {
         // the name of the model must match the "allowAttribute" from above.
         model: attributeIdentifier,
         view: {
           name: optionConfig.tagName || "span",
-          // TODO: check if classes is an array
-          classes: classes && [classes],
-          // TODO: check if styles is an object
-          styles: styles && styles,
-          attributes: rest,
+          classes: getClasses(optionConfig.attributes),
+          styles: getStyles(optionConfig.attributes),
+          attributes: getAttributes(optionConfig.attributes),
         },
       };
 
@@ -31,7 +29,7 @@ export default (identifier, optionConfig) =>
 
       this.editor.commands.add(
         "pencilCaseCommand:" + identifier,
-        new AttributeCommand(this.editor, attributeIdentifier)
+        new PencilCaseCommand(this.editor, attributeIdentifier)
       );
     }
   };

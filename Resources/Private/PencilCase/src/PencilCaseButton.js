@@ -15,6 +15,12 @@ import "./styles.module.css";
   i18nRegistry: globalRegistry.get("i18n"),
 }))
 export default class PencilCaseButton extends PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.contentRef = React.createRef();
+  }
+
   static propTypes = {
     i18nRegistry: PropTypes.object,
     tooltip: PropTypes.string,
@@ -26,12 +32,31 @@ export default class PencilCaseButton extends PureComponent {
     isOpen: false,
   };
 
-  handleClick = () => {
+  handleButtonClick = () => {
+    if (
+      this.props.optionConfiguration.editableAttributes &&
+      !this.state.isOpen
+    ) {
+      this.setState({ isOpen: true });
+      return;
+    }
+
     executeCommand("pencilCaseCommand:" + this.props.optionIdentifier);
   };
 
+  handleClose = (event) => {
+    if (
+      event &&
+      this.contentRef?.current &&
+      this.contentRef?.current?.contains(e.target)
+    ) {
+      return;
+    }
+
+    this.setState({ isOpen: false });
+  };
+
   handleAttributeChange = (value, attributeKey) => {
-    console.log(value);
     executeCommand(
       `PencilCaseEditableAttribute_${this.props.optionIdentifier}_${attributeKey}`,
       value,
@@ -39,37 +64,20 @@ export default class PencilCaseButton extends PureComponent {
     );
   };
 
-  componentWillReceiveProps = (nextProps) => {
-    if (!nextProps.isActive) {
-      {
-        Object.keys(this.props.optionConfiguration.editableAttributes).map(
-          (attributeKey) => {
-            this.handleAttributeChange("", attributeKey);
-          }
-        );
-      }
-    }
-  };
-
   render() {
     const props = {
-      onClick: this.handleClick,
       isActive: Boolean(this.props.isActive),
       title: this.props.i18nRegistry.translate(this.props.tooltip),
       icon: this.props.icon,
+      editableAttributes: this.props.optionConfiguration.editableAttributes,
     };
 
-    console.log(this.props);
-
-    return (
+    return props.editableAttributes ? (
       <DropDown.Stateless
         className="pencilCaseDropdown"
-        isOpen={this.state.isOpen}
-        onToggle={() => console.log("TOGGLE")}
-        onClose={() => console.log("CLOSE")}
-        onMouseEnter={() => this.setState({ isOpen: true })}
-        onMouseLeave={() => this.setState({ isOpen: false })}
-        padded={false}
+        isOpen={props.isActive && this.state.isOpen}
+        onToggle={this.handleButtonClick}
+        onClose={this.handleClose}
       >
         <DropDown.Header
           shouldKeepFocusState={false}
@@ -79,6 +87,7 @@ export default class PencilCaseButton extends PureComponent {
         </DropDown.Header>
         <DropDown.Contents scrollable={true}>
           <ul
+            ref={this.contentRef}
             style={{
               position: "fixed",
               display: "flex",
@@ -100,20 +109,14 @@ export default class PencilCaseButton extends PureComponent {
                       marginBottom: 4,
                     }}
                   >
-                    {/* {i18nRegistry.translate(
-                "Neos.Neos.Ui:Main:ckeditor__toolbar__link__title",
-                "Title"
-              )} */}
+                    {/* // TODO: Add label and maybe i18n support */}
                     {attributeKey}
                   </label>
                   <div>
+                    {/* // TODO: Add placeholder */}
                     <TextInput
                       id={`__neos__pencilCase-attribute--${attributeKey}`}
                       value={this.getAttributeValue(attributeKey) || ""}
-                      // placeholder={i18nRegistry.translate(
-                      //   "Neos.Neos.Ui:Main:ckeditor__toolbar__link__titlePlaceholder",
-                      //   "Enter link title"
-                      // )}
                       onChange={(value) => {
                         this.handleAttributeChange(value, attributeKey);
                       }}
@@ -125,6 +128,8 @@ export default class PencilCaseButton extends PureComponent {
           </ul>
         </DropDown.Contents>
       </DropDown.Stateless>
+    ) : (
+      <IconButton {...props} />
     );
   }
 

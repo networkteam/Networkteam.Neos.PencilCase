@@ -1,38 +1,43 @@
 import Plugin from "@ckeditor/ckeditor5-core/src/plugin";
 import PencilCaseAttributeCommand from "./PencilCaseAttributeCommand";
 
-export default (identifier, tagName, attributeKey, attributeValue) =>
+export default (identifier, tagName, key, value) =>
   class AttributePlugin extends Plugin {
     init() {
-      const attributeIdentifier = `PencilCaseEditableAttribute_${identifier}_${attributeKey}`
+      const attributeIdentifier = `PencilCaseAttribute_${identifier}`;
+      const attributeKey = `PencilCaseEditableAttribute_${identifier}_${key}`;
       this.editor.model.schema.extend("$text", {
-        allowAttributes: attributeIdentifier,
+        allowAttributes: attributeKey,
       });
 
       this.editor.conversion.for("downcast").attributeToElement({
-        model: attributeIdentifier,
+        model: attributeKey,
         view: (value, writer) =>
-          writer.createAttributeElement(
-            tagName,
-            {
-              [attributeKey]: value,
-            },
-          ),
+          writer.createAttributeElement(tagName, {
+            [key]: value,
+          }),
       });
 
       this.editor.conversion.for("upcast").elementToAttribute({
         view: {
           name: tagName,
           attributes: {
-            [attributeKey]: attributeValue,
+            [key]: value,
           },
         },
         model: {
-          key: attributeIdentifier,
-          value: (viewElement) => viewElement.getAttribute(attributeKey),
+          key: attributeKey,
+          value: (viewElement) => viewElement.getAttribute(key),
         },
       });
 
-      this.editor.commands.add(attributeIdentifier, new PencilCaseAttributeCommand(this.editor, attributeIdentifier));
+      this.editor.commands.add(
+        attributeKey,
+        new PencilCaseAttributeCommand(
+          this.editor,
+          attributeKey,
+          attributeIdentifier
+        )
+      );
     }
   };
