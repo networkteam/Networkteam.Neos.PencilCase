@@ -9,7 +9,7 @@ Neos:
       frontendConfiguration:
         Networkteam.Neos.PencilCase:
           # the heading options will be added to the dropdown menu for blockstyles
-          headingOptions: 
+          headingOptions:
             fancy:
               label: Fancy
               tagName: span
@@ -24,12 +24,21 @@ Neos:
               tooltip: Highlight
               icon: rocket
               tagName: span
-              attributes:             # are fixed when set in config
+              # are fixed when set in config
+              attributes:
                 class: 'highlight'
                 style:
                   background: violet
-              editableAttributes:     # will be editable inside ckEditor
-                id: true              # set a custom anchor inside your copytext
-                data-test: true       # add information to certain parts of copytext
-                title: true           # native tooltip
+              # will be editable inside ckEditor
+              editableAttributes:
+                # set a custom anchor inside your copytext
+                id:
+                  # add label to the input field (falling back to attribute name), with i18n support
+                  label: ID
+                  # add a placeholder to the input field, with i18n support
+                  placeholder: Vendor.Site:Main:id.placeholder
+                # add information to certain parts of copytext
+                data-test: true
+                # native tooltip
+                title: true
 ```

@@ -1,6 +1,8 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import {
+  Button,
+  Icon,
   IconButton,
   TextInput,
   DropDown,
@@ -33,12 +35,20 @@ export default class PencilCaseButton extends PureComponent {
   };
 
   handleButtonClick = () => {
-    if (
-      this.props.optionConfiguration.editableAttributes &&
-      !this.state.isOpen
-    ) {
-      this.setState({ isOpen: true });
-      return;
+    if (this.props.optionConfiguration.editableAttributes) {
+      this.setState({ isOpen: !this.state.isOpen });
+
+      if (this.props.isActive) {
+        return;
+      }
+    }
+
+    this.handleToggleCommand();
+  };
+
+  handleToggleCommand = () => {
+    if (this.props.isActive) {
+      this.setState({ isOpen: false });
     }
 
     executeCommand("pencilCaseCommand:" + this.props.optionIdentifier);
@@ -48,7 +58,7 @@ export default class PencilCaseButton extends PureComponent {
     if (
       event &&
       this.contentRef?.current &&
-      this.contentRef?.current?.contains(e.target)
+      this.contentRef?.current?.contains(event.target)
     ) {
       return;
     }
@@ -100,36 +110,60 @@ export default class PencilCaseButton extends PureComponent {
             }}
           >
             {Object.keys(this.props.optionConfiguration.editableAttributes).map(
-              (attributeKey) => (
-                <li>
-                  <label
-                    htmlFor={`__neos__pencilCase-attribute--${attributeKey}`}
-                    style={{
-                      display: "block",
-                      marginBottom: 4,
-                    }}
-                  >
-                    {/* // TODO: Add label and maybe i18n support */}
-                    {attributeKey}
-                  </label>
-                  <div>
-                    {/* // TODO: Add placeholder */}
-                    <TextInput
-                      id={`__neos__pencilCase-attribute--${attributeKey}`}
-                      value={this.getAttributeValue(attributeKey) || ""}
-                      onChange={(value) => {
-                        this.handleAttributeChange(value, attributeKey);
+              (attributeKey) => {
+                const options =
+                  this.props.optionConfiguration.editableAttributes[
+                    attributeKey
+                  ];
+
+                return (
+                  <li>
+                    <label
+                      htmlFor={`__neos__pencilCase-attribute--${attributeKey}`}
+                      style={{
+                        display: "block",
+                        marginBottom: 4,
                       }}
-                    />
-                  </div>
-                </li>
-              )
+                    >
+                      {options?.label
+                        ? this.props.i18nRegistry.translate(options.label)
+                        : attributeKey}
+                    </label>
+                    <div>
+                      <TextInput
+                        id={`__neos__pencilCase-attribute--${attributeKey}`}
+                        value={this.getAttributeValue(attributeKey) || ""}
+                        onChange={(value) => {
+                          this.handleAttributeChange(value, attributeKey);
+                        }}
+                        placeholder={
+                          options?.placeholder &&
+                          this.props.i18nRegistry.translate(options.placeholder)
+                        }
+                      />
+                    </div>
+                  </li>
+                );
+              }
             )}
+            <li style={{ display: "flex", flexDirection: "column" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: 4,
+                }}
+              >
+                {this.props.i18nRegistry.translate("Neos.Neos:Main:remove")}
+              </label>
+              <Button onClick={this.handleToggleCommand}>
+                <Icon icon="trash" />
+              </Button>
+            </li>
           </ul>
         </DropDown.Contents>
       </DropDown.Stateless>
     ) : (
-      <IconButton {...props} />
+      <IconButton onClick={this.handleButtonClick} {...props} />
     );
   }
 

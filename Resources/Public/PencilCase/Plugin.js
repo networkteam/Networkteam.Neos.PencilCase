@@ -565,7 +565,7 @@
     try {
       value[symToStringTag] = void 0;
       var unmasked = true;
-    } catch (e2) {
+    } catch (e) {
     }
     var result = nativeObjectToString.call(value);
     if (unmasked) {
@@ -717,11 +717,11 @@
     if (func != null) {
       try {
         return funcToString.call(func);
-      } catch (e2) {
+      } catch (e) {
       }
       try {
         return func + "";
-      } catch (e2) {
+      } catch (e) {
       }
     }
     return "";
@@ -858,7 +858,7 @@
           var func = getNative_default(Object, "defineProperty");
           func({}, "", {});
           return func;
-        } catch (e2) {
+        } catch (e) {
         }
       }();
       defineProperty_default = defineProperty;
@@ -1260,7 +1260,7 @@
             return types;
           }
           return freeProcess && freeProcess.binding && freeProcess.binding("util");
-        } catch (e2) {
+        } catch (e) {
         }
       }();
       nodeUtil_default = nodeUtil;
@@ -1962,14 +1962,14 @@
     }
   });
 
-  // src/PencilCasePlugin.js
-  var import_ckeditor5_exports, PencilCasePlugin_default;
-  var init_PencilCasePlugin = __esm({
-    "src/PencilCasePlugin.js"() {
+  // src/pencilCasePlugin.js
+  var import_ckeditor5_exports, pencilCasePlugin_default;
+  var init_pencilCasePlugin = __esm({
+    "src/pencilCasePlugin.js"() {
       import_ckeditor5_exports = __toESM(require_ckeditor5_exports());
       init_PencilCaseCommand();
       init_utils();
-      PencilCasePlugin_default = (identifier, optionConfig) => class PencilCasePlugin extends import_ckeditor5_exports.Plugin {
+      pencilCasePlugin_default = (identifier, optionConfig) => class PencilCasePlugin extends import_ckeditor5_exports.Plugin {
         init() {
           const attributeIdentifier = "PencilCaseAttribute_" + identifier;
           this.editor.model.schema.extend("$text", {
@@ -2177,14 +2177,22 @@
             isOpen: false
           };
           this.handleButtonClick = () => {
-            if (this.props.optionConfiguration.editableAttributes && !this.state.isOpen) {
-              this.setState({ isOpen: true });
-              return;
+            if (this.props.optionConfiguration.editableAttributes) {
+              this.setState({ isOpen: !this.state.isOpen });
+              if (this.props.isActive) {
+                return;
+              }
+            }
+            this.handleToggleCommand();
+          };
+          this.handleToggleCommand = () => {
+            if (this.props.isActive) {
+              this.setState({ isOpen: false });
             }
             (0, import_neos_ui_ckeditor5_bindings.executeCommand)("pencilCaseCommand:" + this.props.optionIdentifier);
           };
           this.handleClose = (event) => {
-            if (event && this.contentRef?.current && this.contentRef?.current?.contains(e.target)) {
+            if (event && this.contentRef?.current && this.contentRef?.current?.contains(event.target)) {
               return;
             }
             this.setState({ isOpen: false });
@@ -2237,29 +2245,43 @@
                 }
               },
               Object.keys(this.props.optionConfiguration.editableAttributes).map(
-                (attributeKey) => /* @__PURE__ */ import_react.default.createElement("li", null, /* @__PURE__ */ import_react.default.createElement(
-                  "label",
-                  {
-                    htmlFor: `__neos__pencilCase-attribute--${attributeKey}`,
-                    style: {
-                      display: "block",
-                      marginBottom: 4
+                (attributeKey) => {
+                  const options = this.props.optionConfiguration.editableAttributes[attributeKey];
+                  return /* @__PURE__ */ import_react.default.createElement("li", null, /* @__PURE__ */ import_react.default.createElement(
+                    "label",
+                    {
+                      htmlFor: `__neos__pencilCase-attribute--${attributeKey}`,
+                      style: {
+                        display: "block",
+                        marginBottom: 4
+                      }
+                    },
+                    options?.label ? this.props.i18nRegistry.translate(options.label) : attributeKey
+                  ), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement(
+                    import_react_ui_components.TextInput,
+                    {
+                      id: `__neos__pencilCase-attribute--${attributeKey}`,
+                      value: this.getAttributeValue(attributeKey) || "",
+                      onChange: (value) => {
+                        this.handleAttributeChange(value, attributeKey);
+                      },
+                      placeholder: options?.placeholder && this.props.i18nRegistry.translate(options.placeholder)
                     }
-                  },
-                  attributeKey
-                ), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement(
-                  import_react_ui_components.TextInput,
-                  {
-                    id: `__neos__pencilCase-attribute--${attributeKey}`,
-                    value: this.getAttributeValue(attributeKey) || "",
-                    onChange: (value) => {
-                      this.handleAttributeChange(value, attributeKey);
-                    }
+                  )));
+                }
+              ),
+              /* @__PURE__ */ import_react.default.createElement("li", { style: { display: "flex", flexDirection: "column" } }, /* @__PURE__ */ import_react.default.createElement(
+                "label",
+                {
+                  style: {
+                    display: "block",
+                    marginBottom: 4
                   }
-                )))
-              )
+                },
+                this.props.i18nRegistry.translate("Neos.Neos:Main:remove")
+              ), /* @__PURE__ */ import_react.default.createElement(import_react_ui_components.Button, { onClick: this.handleToggleCommand }, /* @__PURE__ */ import_react.default.createElement(import_react_ui_components.Icon, { icon: "trash" })))
             ))
-          ) : /* @__PURE__ */ import_react.default.createElement(import_react_ui_components.IconButton, { ...props });
+          ) : /* @__PURE__ */ import_react.default.createElement(import_react_ui_components.IconButton, { onClick: this.handleButtonClick, ...props });
         }
         getAttributeValue(attributeKey) {
           return this.props.formattingUnderCursor?.[`PencilCaseEditableAttribute_${this.props.optionIdentifier}_${attributeKey}`];
@@ -2286,7 +2308,7 @@
     "src/manifest.js"() {
       init_dist();
       import_plow_js = __toESM(require_plow_js());
-      init_PencilCasePlugin();
+      init_pencilCasePlugin();
       init_AttributePlugin();
       init_PencilCaseButton();
       init_utils();
@@ -2372,7 +2394,7 @@
                 (ckEditorConfiguration) => {
                   ckEditorConfiguration.plugins = ckEditorConfiguration.plugins || [];
                   ckEditorConfiguration.plugins.push(
-                    PencilCasePlugin_default(identifier, optionConfig)
+                    pencilCasePlugin_default(identifier, optionConfig)
                   );
                   return ckEditorConfiguration;
                 }

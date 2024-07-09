@@ -1,6 +1,6 @@
 import manifest from "@neos-project/neos-ui-extensibility";
 import { $get } from "plow-js";
-import PencilCasePlugin from "./PencilCasePlugin";
+import PencilCasePlugin from "./pencilCasePlugin";
 import AttributePlugin from "./AttributePlugin";
 import PencilCaseButton from "./PencilCaseButton";
 import { getAttributes, getClasses, getStyles } from "./utils";
