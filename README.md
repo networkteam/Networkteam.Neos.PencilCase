@@ -1,5 +1,35 @@
 # Networkteam.Neos.PencilCase
 
+## Installation
+
+1. Install the package into the root-folder of your Project with `composer require networkteam/neos-pencilcase`
+1. Then you create the Settings.PencilCase.yaml in the Configurations Folder of the DistributionPackages.
+1. At last you add the package as a dependency to the composer.json of the DistributionPackages as well:
+```json
+{
+  "require": {
+    "networkteam/neos-pencilcase": "*",
+  }
+}
+```
+
+## Usage
+
+Now it is possible to define custom Options in the Settings.PencilCase.yaml. The options can be addressed in the NodeType-Definitions. Under editorOptions/formatting it is possible to name and activate the custom options.
+
+#### NodeType.yaml
+
+```yaml
+  ui:
+    inline:
+      editorOptions:
+        formatting:
+          violet: true
+          fancy: true
+```
+
+## Example Settings.PencilCase.yaml
+
 Customize your CKeditor using a yaml file
 
 ```yaml
